@@ -9,7 +9,7 @@
   import TickerBar   from './components/TickerBar.svelte';
 
   import { fetchGames, connectWS } from './services/GameService';
-  import { games, gamesLoading, launchingGame, onlineCount, pushToast, launchStages, launchPhase, resetLaunchStages } from './stores';
+  import { games, gamesLoading, launchingGame, onlineCount, pushToast, launchStages, launchPhase, resetLaunchStages, theme } from './stores';
   import { launch } from './services/LaunchService';
   import type { Game } from './types';
 
@@ -23,6 +23,7 @@
   let driftInterval: ReturnType<typeof setInterval>;
 
   onMount(async () => {
+    theme.init();
     performance.mark('app-mount');
     const data = await fetchGames();
     performance.mark('games-fetched');

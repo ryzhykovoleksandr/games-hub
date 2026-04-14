@@ -38,3 +38,35 @@ export function pushToast(t: Omit<Toast, 'id'>) {
     toasts.update(all => all.filter(x => x.id !== id));
   }, 4500);
 }
+
+// Theme
+export type Theme = 'dark' | 'light';
+
+function createThemeStore() {
+  const stored = typeof localStorage !== 'undefined' 
+    ? (localStorage.getItem('theme') as Theme) || 'dark'
+    : 'dark';
+  
+  const { subscribe, set, update } = writable<Theme>(stored);
+
+  return {
+    subscribe,
+    toggle: () => {
+      update(t => {
+        const next = t === 'dark' ? 'light' : 'dark';
+        if (typeof localStorage !== 'undefined') {
+          localStorage.setItem('theme', next);
+        }
+        document.documentElement.setAttribute('data-theme', next);
+        return next;
+      });
+    },
+    init: () => {
+      if (typeof localStorage !== 'undefined') {
+        document.documentElement.setAttribute('data-theme', stored);
+      }
+    }
+  };
+}
+
+export const theme = createThemeStore();
