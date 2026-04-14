@@ -32,6 +32,8 @@
     scrollbar-width: none;
     opacity: 0;
     animation: fade-up var(--dur-slow) var(--ease-out) 0.34s forwards;
+    contain: layout style;
+    transform: translateZ(0);
   }
   .filter-bar::-webkit-scrollbar { display: none; }
   .filter-chip {

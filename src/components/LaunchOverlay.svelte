@@ -1,129 +1,79 @@
 <script lang="ts">
-  // ============================================================
-  // LaunchOverlay.svelte — Svelte 5
-  // $state() replaces let for reactive local variables.
-  // $effect() replaces reactive $: blocks that have side effects.
-  // ============================================================
   import { onDestroy } from 'svelte';
-  import { launchingGame, launchPhase, launchStages, resetLaunchStages } from '../stores';
-  import { launch } from '../services/LaunchService';
+  import { launchingGame, launchPhase, launchStages } from '../stores';
   import { startCanvasAnimation } from '../services/CanvasService';
-  import type { Game } from '../types';
+
+  const { onexit }: { onexit: () => void } = $props();
 
   let canvasEl    = $state<HTMLCanvasElement | undefined>(undefined);
   let canvasVisible = $state(false);
   let exitVisible   = $state(false);
   let canvasHandle: { stop: () => void } | null = null;
 
-  // React to launchingGame changes
   $effect(() => {
-    const game = $launchingGame;
-    if (game) startLaunch(game);
-  });
-
-  async function startLaunch(game: Game) {
-    resetLaunchStages();
-    canvasVisible = false;
-    exitVisible   = false;
-    canvasHandle?.stop();
-    canvasHandle = null;
-
-    await launch(game.id, {
-      onStart: () => launchPhase.set('loading'),
-
-      onStageStart: (id) => {
-        launchStages.update(stages =>
-          stages.map(s => s.id === id ? { ...s, status: 'active' } : s)
-        );
-      },
-
-      onStageProgress: (id, pct) => {
-        launchStages.update(stages =>
-          stages.map(s => s.id === id ? { ...s, fill: pct } : s)
-        );
-      },
-
-      onStageDone: (id) => {
-        launchStages.update(stages =>
-          stages.map(s => s.id === id ? { ...s, status: 'done', fill: 100 } : s)
-        );
-      },
-
-      onComplete: (gameId) => {
-        launchPhase.set('launched');
-        canvasVisible = true;
-
+    if ($launchPhase === 'launched' && $launchingGame) {
+      canvasVisible = true;
+      requestAnimationFrame(() => {
         requestAnimationFrame(() => {
-          requestAnimationFrame(() => {
-            const currentGame = $launchingGame;
-            if (canvasEl && currentGame) {
-              canvasHandle = startCanvasAnimation(canvasEl, currentGame.color);
-            }
-          });
+          if (canvasEl) {
+            canvasHandle = startCanvasAnimation(canvasEl, $launchingGame!.color);
+          }
         });
-
-        setTimeout(() => (exitVisible = true), 400);
-      },
-    });
-  }
-
-  function exit() {
-    canvasHandle?.stop();
-    canvasHandle  = null;
-    canvasVisible = false;
-    exitVisible   = false;
-    launchingGame.set(null);
-    launchPhase.set('idle');
-    resetLaunchStages();
-  }
+      });
+      setTimeout(() => (exitVisible = true), 400);
+    } else {
+      canvasVisible = false;
+      exitVisible = false;
+      canvasHandle?.stop();
+      canvasHandle = null;
+    }
+  });
 
   onDestroy(() => canvasHandle?.stop());
 </script>
 
 {#if $launchingGame}
-  <div class="overlay">
+<div class="overlay">
+  <div class="launch-title">{$launchingGame.title}</div>
+  <div class="launch-label">Launching · Instant Play</div>
 
-    <div class="launch-title">{$launchingGame.title}</div>
-    <div class="launch-label">Launching · Instant Play</div>
-
-    <div class="stages">
-      {#each $launchStages as stage}
-        <div
-          class="stage-row"
-          class:visible={stage.status !== 'pending'}
-          class:active={stage.status === 'active'}
-          class:done={stage.status === 'done'}
-        >
-          <span class="stage-label">{stage.label}</span>
-          <div class="stage-track">
-            <div class="stage-fill" style="width:{stage.fill}%"></div>
-          </div>
-          <span class="stage-check">✓</span>
+  <div class="stages">
+    {#each $launchStages as stage}
+      <div
+        class="stage-row"
+        class:visible={stage.status !== 'pending'}
+        class:active={stage.status === 'active'}
+        class:done={stage.status === 'done'}
+      >
+        <span class="stage-label">{stage.label}</span>
+        <div class="stage-track">
+          <div class="stage-fill" style="width:{stage.fill}%"></div>
         </div>
-      {/each}
-    </div>
-
-    {#if canvasVisible}
-      <div class="canvas-wrap">
-        <canvas
-          bind:this={canvasEl}
-          width="800"
-          height="500"
-        ></canvas>
-        <div class="canvas-overlay">
-          <div class="canvas-game-title">{$launchingGame.title}</div>
-          <div class="canvas-sub">game running in browser</div>
-        </div>
+        <span class="stage-check">✓</span>
       </div>
-    {/if}
-
-    <button
-      class="exit-btn"
-      class:visible={exitVisible}
-      onclick={exit}
-    >← Back to Hub</button>
-
+    {/each}
   </div>
+
+  {#if canvasVisible}
+    <div class="canvas-wrap">
+      <canvas
+        bind:this={canvasEl}
+        width="800"
+        height="500"
+      ></canvas>
+      <div class="canvas-overlay">
+        <div class="canvas-game-title">{$launchingGame.title}</div>
+        <div class="canvas-sub">game running in browser</div>
+      </div>
+    </div>
+  {/if}
+
+  <button
+    class="exit-btn"
+    class:visible={exitVisible}
+    onclick={onexit}
+  >← Back to Hub</button>
+</div>
 {/if}
 
 <style>
@@ -136,7 +86,9 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    animation: fade-up var(--dur-base) var(--ease-out) forwards;
+    contain: layout style;
+    will-change: transform, opacity;
+    transform: translateZ(0);
   }
 
   .launch-title {
@@ -197,12 +149,14 @@
     background: var(--bg-elevated);
     border-radius: 99px;
     overflow: hidden;
+    contain: strict;
   }
   .stage-fill {
     height: 100%;
     border-radius: 99px;
     background: linear-gradient(90deg, var(--accent-cool), var(--accent-prime));
     transition: width 0.05s linear;
+    will-change: width;
   }
   .stage-check {
     font-size: 12px;
@@ -232,6 +186,7 @@
     display: block;
     width: 100%;
     height: 100%;
+    contain: strict;
   }
   .canvas-overlay {
     position: absolute;

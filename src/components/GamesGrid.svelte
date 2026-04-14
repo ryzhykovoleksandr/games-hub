@@ -40,6 +40,7 @@
     position: relative;
     z-index: 1;
     padding: 0 32px 80px;
+    contain: layout style;
   }
   .section-header {
     display: flex;
@@ -63,5 +64,7 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
     gap: 16px;
+    content-visibility: auto;
+    contain-intrinsic-size: 0 400px;
   }
 </style>

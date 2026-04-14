@@ -1,9 +1,6 @@
 <script lang="ts">
-  // ============================================================
-  // GameCard.svelte — Svelte 5
-  // Replaces createEventDispatcher with callback prop `onplay`.
-  // ============================================================
   import type { Game } from '../types';
+  import { prefetchGame } from '../services/GameService';
 
   const { game, index = 0, onplay }: {
     game: Game;
@@ -15,15 +12,17 @@
 
   function handlePlay(e: MouseEvent) {
     e.stopPropagation();
-    // [PERF UX] Ripple fires instantly at ~80ms — before any async
     rippling = true;
     setTimeout(() => (rippling = false), 400);
     onplay(game);
   }
 
+  let prefetched = false;
   function onMouseEnter() {
-    // [PERF UX] CDN warming on hover — real: fetch(`/api/games/${game.id}/manifest`)
-    console.debug(`[prefetch] warming: ${game.id}`);
+    if (!prefetched) {
+      prefetched = true;
+      prefetchGame(game.id);
+    }
   }
 </script>
 
@@ -78,20 +77,22 @@
     overflow: hidden;
     cursor: pointer;
     will-change: transform;
+    contain: layout style;
+    transform: translateZ(0);
     transition:
       transform    var(--dur-base) var(--ease-spring),
       box-shadow   var(--dur-base) var(--ease-out),
       border-color var(--dur-base) var(--ease-out);
     opacity: 0;
-    transform: translateY(12px);
+    transform: translateY(12px) translateZ(0);
     animation: card-reveal var(--dur-slow) var(--ease-out) forwards;
     animation-delay: calc(var(--card-index) * 0.055s);
   }
   @keyframes card-reveal {
-    to { opacity: 1; transform: translateY(0); }
+    to { opacity: 1; transform: translateY(0) translateZ(0); }
   }
   .game-card:hover {
-    transform: translateY(-4px) scale(1.01);
+    transform: translateY(-4px) scale(1.01) translateZ(0);
     box-shadow: 0 20px 60px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.1);
   }
   .game-card::before {
@@ -119,6 +120,7 @@
     background-size: cover;
     background-position: center;
     transition: transform var(--dur-slow) var(--ease-out);
+    will-change: transform;
   }
   .game-card:hover .card-thumb-bg { transform: scale(1.06); }
 

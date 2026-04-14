@@ -1,12 +1,12 @@
 // ============================================================
-// stores/index.ts — Svelte 5 compatible stores
-// Svelte 5 keeps writable/derived from 'svelte/store' — no change needed.
+// stores/index.ts — Svelte 5 optimized stores
 // ============================================================
 import { writable, derived } from 'svelte/store';
 import type { Game, GameFilter, LaunchPhase, LaunchStage, Toast } from '../types';
 import { STAGES } from '../services/LaunchService';
 
-// ── Games ────────────────────────────────────────────────────
+const STAGE_POOL = STAGES.map(s => ({ id: s.id, label: s.label, status: 'pending' as const, fill: 0 }));
+
 export const games        = writable<Game[]>([]);
 export const gamesLoading = writable<boolean>(true);
 export const activeFilter = writable<GameFilter>('all');
@@ -20,20 +20,14 @@ export const filteredGames = derived(
       : $games.filter(g => g.genre.toLowerCase() === $filter),
 );
 
-// ── Launch ───────────────────────────────────────────────────
 export const launchingGame = writable<Game | null>(null);
 export const launchPhase   = writable<LaunchPhase>('idle');
-
-const initialStages = (): LaunchStage[] =>
-  STAGES.map(s => ({ id: s.id, label: s.label, status: 'pending' as const, fill: 0 }));
-
-export const launchStages = writable<LaunchStage[]>(initialStages());
+export const launchStages  = writable<LaunchStage[]>([...STAGE_POOL]);
 
 export function resetLaunchStages() {
-  launchStages.set(initialStages());
+  launchStages.set(STAGE_POOL.map(s => ({ ...s })));
 }
 
-// ── Toasts ───────────────────────────────────────────────────
 let _toastId = 0;
 export const toasts = writable<Toast[]>([]);
 
