@@ -1,0 +1,121 @@
+// ============================================================
+// data/games.ts — static game catalog
+// [SCALE] Replace with API response; shape matches Game interface.
+// ============================================================
+
+import type { Game } from './types';
+
+export const GAMES: Game[] = [
+  {
+    id: 'voidrift',
+    title: 'Voidrift',
+    genre: 'Action',
+    rating: '★ 4.8',
+    players: '3.2k',
+    size: '480 MB',
+    badge: 'HOT',
+    accent: '#ff3d6b',
+    gradient: 'linear-gradient(135deg,#1a0010,#3d0030,#7b0050)',
+    color: '#ff3d6b',
+  },
+  {
+    id: 'celestia',
+    title: 'Celestia',
+    genre: 'RPG',
+    rating: '★ 4.9',
+    players: '5.1k',
+    size: '820 MB',
+    badge: 'NEW',
+    accent: '#7b61ff',
+    gradient: 'linear-gradient(135deg,#0a0020,#1a0060,#3d00a0)',
+    color: '#7b61ff',
+  },
+  {
+    id: 'gridlock',
+    title: 'Gridlock',
+    genre: 'Strategy',
+    rating: '★ 4.5',
+    players: '1.8k',
+    size: '190 MB',
+    badge: null,
+    accent: '#00f5a0',
+    gradient: 'linear-gradient(135deg,#001a10,#003d28,#007d50)',
+    color: '#00f5a0',
+  },
+  {
+    id: 'neonhunt',
+    title: 'Neon Hunt',
+    genre: 'Action',
+    rating: '★ 4.6',
+    players: '2.4k',
+    size: '310 MB',
+    badge: 'HOT',
+    accent: '#ffb830',
+    gradient: 'linear-gradient(135deg,#1a1000,#3d2800,#7d4800)',
+    color: '#ffb830',
+  },
+  {
+    id: 'echoes',
+    title: 'Echoes',
+    genre: 'Puzzle',
+    rating: '★ 4.7',
+    players: '920',
+    size: '95 MB',
+    badge: 'NEW',
+    accent: '#00c8ff',
+    gradient: 'linear-gradient(135deg,#001020,#002040,#004070)',
+    color: '#00c8ff',
+  },
+  {
+    id: 'apexdrift',
+    title: 'Apex Drift',
+    genre: 'Racing',
+    rating: '★ 4.4',
+    players: '4.3k',
+    size: '640 MB',
+    badge: null,
+    accent: '#ff8c00',
+    gradient: 'linear-gradient(135deg,#1a0800,#3d1800,#7d2800)',
+    color: '#ff8c00',
+  },
+  {
+    id: 'mirrorworld',
+    title: 'Mirror World',
+    genre: 'Indie',
+    rating: '★ 4.9',
+    players: '680',
+    size: '75 MB',
+    badge: 'NEW',
+    accent: '#e040fb',
+    gradient: 'linear-gradient(135deg,#150020,#2d0050,#500080)',
+    color: '#e040fb',
+  },
+  {
+    id: 'siegefall',
+    title: 'Siegefall',
+    genre: 'Strategy',
+    rating: '★ 4.3',
+    players: '1.2k',
+    size: '420 MB',
+    badge: null,
+    accent: '#ff5722',
+    gradient: 'linear-gradient(135deg,#1a0500,#3d0f00,#7d1f00)',
+    color: '#ff5722',
+  },
+];
+
+export const FILTERS = [
+  { id: 'all',      label: 'All Games' },
+  { id: 'action',   label: 'Action'    },
+  { id: 'strategy', label: 'Strategy'  },
+  { id: 'rpg',      label: 'RPG'       },
+  { id: 'puzzle',   label: 'Puzzle'    },
+  { id: 'racing',   label: 'Racing'    },
+  { id: 'indie',    label: 'Indie'     },
+] as const;
+
+export const TICKER_EVENTS = [
+  ...GAMES.map(g => `<strong>${g.players}</strong> playing <span class="t-game">${g.title}</span>`),
+  `<strong>12,847</strong> players online right now`,
+  ...GAMES.map(g => `<span class="t-game">${g.title}</span> — ${g.genre} · ${g.size}`),
+];

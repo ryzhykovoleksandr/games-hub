@@ -1,0 +1,1 @@
+import{n as o}from"../../chunks/games.js";var s=async()=>({games:o,gamesByGenre:o.reduce((e,n)=>{const r=n.genre.toLowerCase();return e[r]||(e[r]=[]),e[r].push(n),e},{}),onlineCount:12847,timestamp:Date.now()});export{s as load};

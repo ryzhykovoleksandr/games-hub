@@ -1,0 +1,40 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    
+    <!-- Resource Hints - DNS prefetch + preconnect for critical origins -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="dns-prefetch" href="https://fonts.googleapis.com" />
+    
+    <!-- Load fonts async for non-blocking render -->
+    <link rel="preload" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" as="style" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" />
+    </noscript>
+    
+    <!-- Critical CSS inline for instant first paint -->
+    <style>
+      *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+      body{font-family:system-ui,sans-serif;background:#080810;color:#f0f0ff;min-height:100vh;-webkit-font-smoothing:antialiased}
+      .nav{position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:0 32px;height:60px;background:rgba(14,14,26,.85);backdrop-filter:blur(20px);border-bottom:1px solid rgba(255,255,255,.06)}
+      .logo{font-size:18px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:#f0f0ff}
+      .logo span{color:#00f5a0}
+      .hero{padding:56px 32px 40px;position:relative;z-index:1}
+      .hero-label{font-family:monospace;font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#00f5a0;margin-bottom:12px;opacity:0;animation:fade-up .42s .1s forwards}
+      .hero-title{font-size:clamp(32px,5vw,56px);font-weight:800;line-height:1.05;letter-spacing:-.02em;margin-bottom:16px;opacity:0;animation:fade-up .42s .18s forwards}
+      .hero-title em{font-style:normal;background:linear-gradient(135deg,#00f5a0,#7b61ff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text}
+      .hero-sub{font-size:15px;color:#8888aa;font-weight:400;max-width:480px;line-height:1.6;opacity:0;animation:fade-up .42s .26s forwards}
+      @keyframes fade-up{to{opacity:1;transform:translateY(0)}from{opacity:0;transform:translateY(10px)}}
+    </style>
+    
+    %sveltekit.head%
+  </head>
+  <body>
+    <div id="app">%sveltekit.body%</div>
+  </body>
+</html>

@@ -1,0 +1,174 @@
+/* Critical CSS - inlined for instant first paint */
+/* Hero, TopBar, and above-the-fold content only */
+
+:root {
+  --bg-void: #080810;
+  --bg-surface: #0e0e1a;
+  --bg-card: #12121f;
+  --bg-elevated: #181828;
+  --accent-prime: #00f5a0;
+  --accent-hot: #ff3d6b;
+  --accent-cool: #7b61ff;
+  --accent-warm: #ffb830;
+  --text-primary: #f0f0ff;
+  --text-secondary: #8888aa;
+  --text-dim: #44445a;
+  --border-subtle: rgba(255,255,255,0.06);
+  --border-card: rgba(255,255,255,0.09);
+  --glow-prime: rgba(0,245,160,0.18);
+  --glow-hot: rgba(255,61,107,0.18);
+  --dur-instant: 80ms;
+  --dur-fast: 160ms;
+  --dur-base: 260ms;
+  --dur-slow: 420ms;
+  --dur-xslow: 700ms;
+  --ease-spring: cubic-bezier(0.34,1.56,0.64,1);
+  --ease-out: cubic-bezier(0.22,1,0.36,1);
+  --ease-in-out: cubic-bezier(0.65,0,0.35,1);
+  --radius-card: 14px;
+  --radius-btn: 8px;
+  --font-display: 'Syne', sans-serif;
+  --font-mono: 'DM Mono', monospace;
+}
+
+:root[data-theme="light"] {
+  --bg-void: #f5f5f7;
+  --bg-surface: #ffffff;
+  --bg-card: #ffffff;
+  --bg-elevated: #f0f0f2;
+  --accent-prime: #00b87a;
+  --accent-hot: #e6395a;
+  --accent-cool: #6366f1;
+  --accent-warm: #f59e0b;
+  --text-primary: #1a1a2e;
+  --text-secondary: #6b7280;
+  --text-dim: #9ca3af;
+  --border-subtle: rgba(0,0,0,0.06);
+  --border-card: rgba(0,0,0,0.08);
+  --glow-prime: rgba(0,184,122,0.15);
+  --glow-hot: rgba(230,57,90,0.15);
+}
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+body {
+  font-family: var(--font-display);
+  background: var(--bg-void);
+  color: var(--text-primary);
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+}
+
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32px;
+  height: 60px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.logo {
+  font-size: 18px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.logo span { color: var(--accent-prime); }
+
+.hero {
+  position: relative;
+  z-index: 1;
+  padding: 56px 32px 40px;
+}
+
+.hero-label {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  color: var(--accent-prime);
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fade-up 420ms cubic-bezier(0.22,1,0.36,1) 0.1s forwards;
+}
+
+.hero-title {
+  font-size: clamp(32px, 5vw, 56px);
+  font-weight: 800;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  margin-bottom: 16px;
+  opacity: 0;
+  animation: fade-up 420ms cubic-bezier(0.22,1,0.36,1) 0.18s forwards;
+}
+
+.hero-title em {
+  font-style: normal;
+  background: linear-gradient(135deg, var(--accent-prime), var(--accent-cool));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.hero-sub {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 400;
+  max-width: 480px;
+  line-height: 1.6;
+  opacity: 0;
+  animation: fade-up 420ms cubic-bezier(0.22,1,0.36,1) 0.26s forwards;
+}
+
+@keyframes fade-up {
+  to { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(10px); }
+}
+
+.skeleton-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 16px;
+  padding: 0 32px 80px;
+}
+
+.skeleton-card {
+  border-radius: var(--radius-card);
+  background: var(--bg-card);
+  border: 1px solid var(--border-card);
+  overflow: hidden;
+}
+
+.skeleton-thumb {
+  aspect-ratio: 16/10;
+  background: linear-gradient(90deg, var(--bg-elevated) 25%, var(--bg-card) 50%, var(--bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-body {
+  padding: 14px;
+}
+
+.skeleton-line {
+  height: 12px;
+  border-radius: 4px;
+  background: var(--bg-elevated);
+  margin-bottom: 8px;
+  animation: shimmer 1.5s infinite;
+}
+
+.skeleton-line.short { width: 60%; }
+.skeleton-line.medium { width: 80%; }
+
+@keyframes shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}

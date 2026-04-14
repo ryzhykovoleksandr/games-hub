@@ -1,0 +1,1 @@
+import{M as o,T as s,Y as i,at as p,f as r,g as m,it as c,j as f}from"../chunks/BLqoP2bp.js";function d(n,a){p(a,!0),m(()=>{r.init()});var t=o(),e=i(t);s(e,()=>a.children),f(n,t),c()}export{d as component};
